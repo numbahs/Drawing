@@ -7,29 +7,42 @@
 // other shapes
 // thickness
 
+// Initialize necessary variables
+
+// Arrays of X and Y coordinates, dragged coordinates, 
+// and colors at the coordinates.
 let clickX = new Array(),
     clickY = new Array(),
     clickDrag = new Array(),
-    clickColors = new Array(),
-    paint, canvas, context,
-    colorBlue = "#0000FF",
-    colorRed = "#FF0000",
-    colorGreen = "#00FF00",
-    colorBlack = "#000000",
-    currColor = colorBlack,
-    width = 3,
+    clickColors = new Array();
+
+// Toggle of whether or not to paint, and current color
+let paint, currColor = "#000000";
+
+// Paint width, current screen size (X and Y)
+let width = 3,
     screenX, screenY;
 
+let canvas, context;
+
 const main = () => {
+
+  // Div to put canvas into, and height of the top buttons
   let canvasDiv = document.getElementById('canvasDiv'),
       buttonsDivHeight = document.getElementById("possibleColors").offsetHeight;
+      
+  //canvas initialization    
   canvas = document.createElement('canvas');
+  context = canvas.getContext("2d");
   canvas.id = "myCanvas";
   canvas.class = "myCanvas";
   canvasDiv.appendChild(canvas);
-  context = canvas.getContext("2d");
 
-  window.addEventListener('resize', resizeCanvas, false);
+  // Make size of canvas
+  resizeCanvas();
+
+  // Event Listeners
+  window.addEventListener('resize', resizeCanvas);
   
   canvas.addEventListener('mousedown', (e) => {
     paint = true;
@@ -81,9 +94,11 @@ const main = () => {
   
 	canvas.addEventListener("touchcancel", (e) => {
 		paint = false;
-	}, false);
+  }, false);
+  
 }
 
+// Function initialization
 // const changeColorBlack = () => {
 //   currColor = colorBlack;
 // }
@@ -100,10 +115,21 @@ const main = () => {
 //   currColor = colorBlue;
 // }
 
+// TODO take from color picker wheel and make that the current color
 const changeColor = () => {
-  
+  currColor = document.getElementById("output").value;
 }
 
+const colorChanger = () => {
+  let body = document.getElementById("raphael"),
+      input = document.createElement("input");
+  
+  input.id = "output";
+  input.value = "#EEEEEE";
+  body.appendChild(input);
+}
+
+// Adds click to the array of clicks
 const addClick = (x, y, dragging) => {
   clickX.push(x);
   clickY.push(y);
@@ -111,12 +137,13 @@ const addClick = (x, y, dragging) => {
   clickColors.push(currColor);
 }
 
+// Clears the canvas
 const clearScreen = () => {
   clickX = new Array();
   clickY = new Array();
   clickDrag = new Array();
   clickColors = new Array(),
-  context.clearRect(0, 0, screenX, screenY); // Clears the canvas
+  context.clearRect(0, 0, screenX, screenY); 
 }
 
 const redraw = () => {
@@ -125,15 +152,15 @@ const redraw = () => {
 
   for(let i = 0; i < clickX.length; i++) {		
     context.beginPath();
-    if(clickDrag[i] && i){
+    if(clickDrag[i] && i) {
       context.moveTo(clickX[i-1], clickY[i-1]);
-     }else{
-       context.moveTo(clickX[i]-1, clickY[i]);
-     }
-     context.lineTo(clickX[i], clickY[i]);
-     context.closePath();
-     context.strokeStyle = clickColors[i];
-     context.stroke();
+      } else{
+        context.moveTo(clickX[i]-1, clickY[i]);
+      }
+      context.lineTo(clickX[i], clickY[i]);
+      context.closePath();
+      context.strokeStyle = clickColors[i];
+      context.stroke();
   }
 }
 
@@ -148,3 +175,22 @@ const resizeCanvas = () => {
 window.onload = () => {
   main();
 }
+
+Raphael(() => {
+  var out = document.getElementById("output"),
+  
+  // this is where colorwheel created
+  cp = Raphael.colorwheel(40, 20, 300, "#eee"),
+
+  clr = Raphael.color("#eee");
+  out.onkeyup = function () {
+      cp.color(this.value);
+  };
+  // assigning onchange event handler
+  cp.onchange = () => {
+      out.value = cp.color().replace(/^#(.)\1(.)\2(.)\3$/, "#$1$2$3");
+      out.style.background = clr;
+      out.style.color = Raphael.rgb2hsb(clr).b < .5 ? "#fff" : "#000";
+  };
+  
+});
