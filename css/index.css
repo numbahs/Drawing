@@ -8,15 +8,18 @@ html, body {
   height: 5%;
 }
 
+.options > button {
+  padding: 0px;
+  border-width: 6px;
+  border-radius: 6px;
+}
+
 .canvasDiv {
   width: 100%;
   height: 95%;
 }
 
-.sp-cancel {
-  display: none;
-}
-
+.sp-cancel,
 .sp-choose {
   display: none;
 }

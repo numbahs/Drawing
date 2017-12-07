@@ -80,7 +80,10 @@ const main = () => {
 
   // current color and width
   currColor = "#000000";
-  width = 3;
+  if(!widthInput.value) {
+    widthInput.value = 3;
+  }
+  width = parseInt(widthInput.value, 10) || 3;
 
   widthInput.addEventListener("change", () => {
     width = parseInt(widthInput.value, 10) || 3;
@@ -224,8 +227,6 @@ const main = () => {
 });
 
 }
-
-
 
 window.onload = () => {
   main();
