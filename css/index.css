@@ -1,0 +1,26 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.options {
+  height: 5%;
+}
+
+.canvasDiv {
+  width: 100%;
+  height: 95%;
+}
+
+.sp-cancel {
+  display: none;
+}
+
+.sp-choose {
+  display: none;
+}
+
+#widthChanger {
+  width: 40px;
+}
